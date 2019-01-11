@@ -1,0 +1,372 @@
+
+自动执行
+ docker  run -it -d  --name  Demo -v D:/code/firstDemo:/Demo     -p 3001:3000 -e SERVER_ENV="tai" -e SERVER_NAME="firstDemo
+" -e SERVER_PORT=3000 -e CONSUL_HOST="consul.xingfuli.me" -e CONSUL_MASTER_TOKEN="12312345" -e CONSUL_PORT=8500   node  node
+ /Demo/output/index.js
+
+
+#从 Docker Hub 网站来搜索镜像
+docker search ubuntu
+
+#下载映像檔
+docker pull docker.xingfuli.me/nestsoft/devdb
+
+#查看映像檔
+#同一仓库源可以有多个 TAG，使用 REPOSITORY:TAG 来代表不同的镜像
+docker images
+
+#将映像檔制作devdb vm，
+# -d:让容器在后台运行
+# -p:Docker开放5432端口映射到主机端口 5000 上，127.0.0.1:5000:5000/udp ，-P:随机映射端口
+# -t:在新容器内指定一个伪终端或终端
+# -i:允许你对容器内的标准输入 (STDIN) 进行交互
+# -e:指定环境变数
+# --name:取匿名
+docker run -it -d --name=devdb -p 5000:5432 docker.xingfuli.me/nestsoft/devdb
+
+#列出可用的 vm
+docker ps -a
+
+#列出 启动中的vm
+docker ps
+
+#重启vm
+docker restart devdb
+
+#查看Docker与Host端口映射
+docker port devdb
+
+#查看Docker的log
+#-f:锁住行程同步打印log
+docker logs -f devdb
+
+#查看容器内部运行的进程
+docker top devdb
+
+#查看 Docker 的底层细节(json)
+docker inspect devdb
+
+#查询最后一次创建的容器
+docker ps -l
+
+#执行devdb vm的bash
+docker exec -i -t devdb bash
+#winpty docker exec -i -t devdb bash
+
+bash-4.3# rm xxx.back
+
+#copy db data
+bash-4.3# pg_dump -h localhost -U postgres render_db -f ./xxx.back_db -f ./xxx.back
+
+bash-4.3# ls
+bash-4.3# exit
+
+#将vm中的资料复制出来，相反也可
+docker cp devdb:/xxx.back E://xxxx.back
+
+#关闭vm
+docker stop devdb
+
+#启动vm
+docker start devdb
+
+#将当前devdb vm 制作成映像檔devdb:v2
+#-m:提交的描述信息
+#-a:指定镜像作者
+docker commit -m="commit message" -a="tai" devdb devdb:v2
+
+#移除可用的vm
+# -f:强制执行
+docker rm devdb
+
+#移除 8828a映像檔
+docker rmi 8828a
+
+
+#构建镜像
+#必须要要有Dockerfile建构指令挡案
+
+#ex1
+<<Dockerfile>>
+FROM    centos:6.7
+MAINTAINER      Fisher "fisher@sudops.com"
+
+RUN     /bin/echo 'root:123456' |chpasswd
+RUN     useradd runoob
+RUN     /bin/echo 'runoob:123456' |chpasswd
+RUN     /bin/echo -e "LANG=\"en_US.UTF-8\"" >/etc/default/local
+EXPOSE  22
+EXPOSE  80
+CMD     /usr/sbin/sshd -D
+
+
+#ex2
+<<Dockerfile>>
+from node #从node映像檔建构
+add ./ /Demo #将工作目录资料复制到新的映像檔/Demo
+cmd ["node", "/Demo/output/index.js"] #执行印象欓时(docker run)自动执行指令
+
+
+#
+# -t ：指定要创建的目标镜像名
+# . ：Dockerfile 文件所在目录，可以指定Dockerfile 的绝对路径
+docker build -t newimage .
+
+
+
+============================================================================================================
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker images
+REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
+docker4w/nsenter-dockerd   latest              2f1c802f322f        2 months ago        187kB
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker pull docker.xingfuli.me/nestsoft/devdb
+Using default tag: latest
+latest: Pulling from nestsoft/devdb
+1e76f742da49: Pulling fs layer
+64e3298445b0: Pulling fs layer
+b1de3917123d: Pulling fs layer
+d7930ec3d519: Pulling fs layer
+e743af94b497: Pulling fs layer
+389a95456ff9: Pulling fs layer
+b838035d8fca: Pulling fs layer
+2db0e14c94d9: Pulling fs layer
+f075ce60b67d: Pulling fs layer
+e533d62a77fe: Pulling fs layer
+c28dc96ae04d: Pulling fs layer
+dd41eff32f1b: Pulling fs layer
+7f45d7f109b1: Pulling fs layer
+73288cab03e8: Pulling fs layer
+3bb288cc5bbf: Pulling fs layer
+4ae4934610ac: Pulling fs layer
+5bd729a5ded4: Pulling fs layer
+b838035d8fca: Waiting
+2db0e14c94d9: Waiting
+f075ce60b67d: Waiting
+e533d62a77fe: Waiting
+c28dc96ae04d: Waiting
+dd41eff32f1b: Waiting
+7f45d7f109b1: Waiting
+73288cab03e8: Waiting
+3bb288cc5bbf: Waiting
+4ae4934610ac: Waiting
+5bd729a5ded4: Waiting
+d7930ec3d519: Waiting
+e743af94b497: Waiting
+389a95456ff9: Waiting
+b1de3917123d: Download complete
+64e3298445b0: Verifying Checksum
+64e3298445b0: Download complete
+e743af94b497: Download complete
+389a95456ff9: Verifying Checksum
+389a95456ff9: Download complete
+b838035d8fca: Verifying Checksum
+b838035d8fca: Download complete
+1e76f742da49: Verifying Checksum
+1e76f742da49: Download complete
+2db0e14c94d9: Verifying Checksum
+2db0e14c94d9: Download complete
+f075ce60b67d: Download complete
+e533d62a77fe: Download complete
+dd41eff32f1b: Verifying Checksum
+dd41eff32f1b: Download complete
+c28dc96ae04d: Verifying Checksum
+c28dc96ae04d: Download complete
+73288cab03e8: Verifying Checksum
+73288cab03e8: Download complete
+7f45d7f109b1: Verifying Checksum
+7f45d7f109b1: Download complete
+4ae4934610ac: Verifying Checksum
+4ae4934610ac: Download complete
+3bb288cc5bbf: Verifying Checksum
+3bb288cc5bbf: Download complete
+5bd729a5ded4: Verifying Checksum
+5bd729a5ded4: Download complete
+d7930ec3d519: Verifying Checksum
+d7930ec3d519: Download complete
+1e76f742da49: Pull complete
+64e3298445b0: Pull complete
+b1de3917123d: Pull complete
+d7930ec3d519: Pull complete
+e743af94b497: Pull complete
+389a95456ff9: Pull complete
+b838035d8fca: Pull complete
+2db0e14c94d9: Pull complete
+f075ce60b67d: Pull complete
+e533d62a77fe: Pull complete
+c28dc96ae04d: Pull complete
+dd41eff32f1b: Pull complete
+7f45d7f109b1: Pull complete
+73288cab03e8: Pull complete
+3bb288cc5bbf: Pull complete
+4ae4934610ac: Pull complete
+5bd729a5ded4: Pull complete
+Digest: sha256:491191bee4a451706306d29874337d145cd75602b7643318d7585b712c89c92b
+Status: Downloaded newer image for docker.xingfuli.me/nestsoft/devdb:latest
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker images
+REPOSITORY                          TAG                 IMAGE ID            CREATED             SIZE
+docker4w/nsenter-dockerd            latest              2f1c802f322f        2 months ago        187kB
+docker.xingfuli.me/nestsoft/devdb   latest              8828ac1be0ea        18 months ago       37.7MB
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker run -it -d --name=devdb -p 5000:5432 docker.xingfuli.me/nestsoft/devdb
+457e35e24c7704e49ec2761c0ef0379440dd171a156d0b4d2674db7022abb6d6
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker ps -a
+CONTAINER ID        IMAGE                               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+457e35e24c77        docker.xingfuli.me/nestsoft/devdb   "docker-entrypoint.s＃"   27 seconds ago      Up 25 seconds       0.0.0.0:5000->5432/tcp   devdb
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker ps
+CONTAINER ID        IMAGE                               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+457e35e24c77        docker.xingfuli.me/nestsoft/devdb   "docker-entrypoint.s＃"   34 seconds ago      Up 32 seconds       0.0.0.0:5000->5432/tcp   devdb
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker restart
+"docker restart" requires at least 1 argument.
+See 'docker restart --help'.
+
+Usage:  docker restart [OPTIONS] CONTAINER [CONTAINER...]
+
+Restart one or more containers
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker restart devdb
+devdb
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker ps
+CONTAINER ID        IMAGE                               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+457e35e24c77        docker.xingfuli.me/nestsoft/devdb   "docker-entrypoint.s＃"   2 minutes ago       Up 10 seconds       0.0.0.0:5000->5432/tcp   devdb
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker stop devdb
+devdb
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker start devdb
+devdb
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker ps
+CONTAINER ID        IMAGE                               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+457e35e24c77        docker.xingfuli.me/nestsoft/devdb   "docker-entrypoint.s＃"   2 minutes ago       Up 11 seconds       0.0.0.0:5000->5432/tcp   devdb
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker exec -i -t devdb bash
+the input device is not a TTY.  If you are using mintty, try prefixing the command with 'winpty'
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker exec -i -t devdb sh
+the input device is not a TTY.  If you are using mintty, try prefixing the command with 'winpty'
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker exec -i -t devdb winpty
+the input device is not a TTY.  If you are using mintty, try prefixing the command with 'winpty'
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ winpty docker exec -i -t devdb winpty
+OCI runtime exec failed: exec failed: container_linux.go:348: starting container process caused "exec: \"winpty\": executable file not found in $PATH": unknow
+n
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ winpty docker exec -i -t devdb bash
+bash-4.3# ls
+bin                         etc                         mnt                         sbin                        usr
+dev                         home                        proc                        srv                         var
+docker-entrypoint-initdb.d  lib                         root                        sys
+docker-entrypoint.sh        media                       run                         tmp
+bash-4.3#  pg_dump -h localhost -U postgres render_db -f ./xxx.back_db -f ./xxx.back
+bash-4.3# ls
+bin                         etc                         mnt                         sbin                        usr
+dev                         home                        proc                        srv                         var
+docker-entrypoint-initdb.d  lib                         root                        sys                         xxx.back
+docker-entrypoint.sh        media                       run                         tmp
+bash-4.3# exit
+exit
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker cp devdb:/xxx.back E://xxxx.back
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ ls E:/
+'$RECYCLE.BIN'/  'System Volume Information'/   xxxx.back
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ winpty docker exec -i -t devdb bash
+bash-4.3# ls
+bin                         etc                         mnt                         sbin                        usr
+dev                         home                        proc                        srv                         var
+docker-entrypoint-initdb.d  lib                         root                        sys                         xxx.back
+docker-entrypoint.sh        media                       run                         tmp
+bash-4.3# rm xxx.back
+bash-4.3# ls
+bin                         etc                         mnt                         sbin                        usr
+dev                         home                        proc                        srv                         var
+docker-entrypoint-initdb.d  lib                         root                        sys
+docker-entrypoint.sh        media                       run                         tmp
+bash-4.3# pwd
+/
+bash-4.3# exit
+exit
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker stop devdb
+devdb
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker ps -a
+CONTAINER ID        IMAGE                               COMMAND                  CREATED             STATUS                      PORTS               NAMES
+457e35e24c77        docker.xingfuli.me/nestsoft/devdb   "docker-entrypoint.s＃"   12 minutes ago      Exited (0) 25 seconds ago                       devdb
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker rm devdb
+devdb
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker images
+REPOSITORY                          TAG                 IMAGE ID            CREATED             SIZE
+docker4w/nsenter-dockerd            latest              2f1c802f322f        2 months ago        187kB
+docker.xingfuli.me/nestsoft/devdb   latest              8828ac1be0ea        18 months ago       37.7MB
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$ docker rmi 8828a
+Untagged: docker.xingfuli.me/nestsoft/devdb:latest
+Untagged: docker.xingfuli.me/nestsoft/devdb@sha256:491191bee4a451706306d29874337d145cd75602b7643318d7585b712c89c92b
+Deleted: sha256:8828ac1be0ea0583b9a7442d3fe4ef3ffb8e20703d099dc5b9243079443a68fe
+Deleted: sha256:ca58c01609621b5f1a3b5648891067ed8871e99dc946e5509e82ab0c8f504876
+Deleted: sha256:e17643ee61d1b4d3cb734085ede6a14923294457338955abb2b460c4c474e684
+Deleted: sha256:43ce1ad4259e367e82d4886e59fbe296ecb528f7241dd64274b9d93bc7af30cf
+Deleted: sha256:1bc281b95e65242c5979e219797ab87a990f18c66fc3b9f0206af9b7c12983db
+Deleted: sha256:469569f323334cf92825ea795b16ac1d325ad120d24a1b9f7c8c32c59e5f0a61
+Deleted: sha256:29cdcc946ccaa26da1dab1631a6e7028e69c26fd09e25c9bdab70463ab845f34
+Deleted: sha256:c1ea7f6024059060f3cc79d6bc5572368c8e235a22022dd4465971aed9f01624
+Deleted: sha256:9d2b3439174612d249b9f1a933620a23e3f9e2bf9e5768fb69d7e9270335318d
+Deleted: sha256:ec12ac90d825c7c1c610e173caf9778faf610ec11163217e923bb9b0d1b93244
+Deleted: sha256:c47e809783b17c0b9473727b29b2832ea8fdc52dc55c4d283436a87d3c00fb4e
+Deleted: sha256:0222515d079fe6b7e8f428ff17594c5efa8c2ec1ae010ef401e8292a5642ea21
+Deleted: sha256:4f51235f1c55af8b49a5dcd7867764d4e1a34041f251ea8f3525fe838cea22e1
+Deleted: sha256:a20edde07a8a10ea4aadba2b10d934abb6e5a3d4f905f6a52287d769226a00be
+Deleted: sha256:3428cfec61f29d98a4dbe3496e74254fcd04374f9b284cf4da09b7e678152e3b
+Deleted: sha256:9f35365178bc4dcbe23a4356117a116146d0d71ba3ab5b2edb2a93e233633f3b
+Deleted: sha256:5a1084b3408cd34fbd19462e57b3505581c92eafddb9e2212d137e2ac9222767
+Deleted: sha256:23b9c7b43573dd164619ad59e9d51eda4095926729f59d5f22803bcbe9ab24c2
+
+Administrator@LUBAN-20190104E MINGW64 ~
+$
