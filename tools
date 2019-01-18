@@ -6,12 +6,35 @@ https://www.adminer.org/
 Nexus Repository Manager
 consul https://www.hashicorp.com/
 swagger
+
+
+
+
+#docker
 docker node:alpine
 
+##kubernetes
+https://www.kubernetes.org.cn/doc-7
+
+https://chocolatey.org/install
+https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl
+https://kubernetes.io/docs/tasks/tools/install-minikube/#install-a-hypervisor
+https://docs.microsoft.com/zh-cn/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v
+https://github.com/kubernetes/minikube/releases/tag/v0.33.0
+
+
+
+
+
+
 #sequelize
+
+
 ##schemer to model
 npm install --save sequelize-cli
 sequelize-auto
+
+
 
 #programming
 单元测试框架：Jest/Mocha
@@ -19,7 +42,10 @@ sequelize-auto
 Boom: HTTP-friendly error objects(to JSON)
 chalk：控制台彩色输出
 
+
+
 ##koa
+
 koa-sslify: 强制跳转到https的中间件
 koa-react-view: 基于react的服务端渲染引擎
 koa-bodyparser：对http请求进行处理
@@ -49,7 +75,11 @@ koa2-cors
 buffer https://github.com/feross/buffer
 
 
+
+
 #learn url
+
+
 
 ##swagger
 https://huangwenchao.gitbooks.io/swagger/content/
@@ -58,10 +88,88 @@ https://www.cnblogs.com/chenweixuan/p/5737235.html
 swagger-jsdoc
 swagger-tools
 
+
+
 ##chrome
 Windows 下 Chrome 快捷键大全
 https://www.cnblogs.com/xunziji/p/6821326.html
 Mac 下 Chrome 快捷键大全  http://www.cnblogs.com/xunziji/archive/2012/08/23/2652530.html
+
+
+
+
+
+
+
+
+
+
+
+# openfaas
+
+## 启动 Openfaas
+
+1. 启动守护进程 awarm or k8s
+docker awarm init
+
+2. 安装faas-cli指令
+windows: https://github.com/openfaas/faas-cli/releases
+
+3. 下载 faas工具包
+git clone https://github.com/openfaas/faas
+
+4. 执行faas工具包 下的sh (使用git bash)
+deploy_stack.sh
+
+5.会显示账号密码 和 登入指令
+Attempting to create credentials for gateway..
+...
+[Credentials]
+ username: admin
+ password: <some_hash_secret>
+ echo -n <some_hash_secret> | faas-cli login --username=admin --password-stdin
+
+6. 执行上面指令，来启动openfass
+echo -n <some_hash_secret> | faas-cli login --username=admin --password-stdin
+
+7. browser连结 localhost:8080 帐密同上
+
+==============================
+## Hello World
+
+
+1. 下载node demo 欓案
+faas-cli new demo --lang node
+
+2. 建构成 faas 专案
+faas-cli build -f demo.yml
+
+3. 上传 demo专案
+faas-cli deploy -f ./demo.yml
+
+4. 浏览以下网站
+http://127.0.0.1:8080/function/demo
+
+
+==============================
+
+## 关闭Openfaas
+
+1 关闭守护进程
+docker swarm leave --force
+
+!!注意这会关闭&删除所有的Containers
+
+2.删除所有相关的 images
+docker images
+docker rmi ..........
+
+
+
+
+
+
+
 
 
 
@@ -83,9 +191,6 @@ Mac 下 Chrome 快捷键大全  http://www.cnblogs.com/xunziji/archive/2012/08/2
 .catch((o)=>{  console.log("2222",o); throw "duuu333"+o;  })
 .catch((o)=>{  console.log("2222JJJ",o); })
 ```
-
-
-
 
 
 
